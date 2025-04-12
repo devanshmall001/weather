@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-overlay"></div>
+
+  <div class="container">
+    <h1>Weather Dashboard</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div id="weatherCard" class="weather-card hidden">
+      <img id="weatherIcon" alt="Weather Icon" />
+      <h2 id="location"></h2>
+      <p id="temperature"></p>
+      <p id="description"></p>
+    </div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('cityInput').value;
+      const apiKey = "31b0a3dd1468ebf26152d8f7e46d9d01";
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+      const data = await response.json();
+
+      if (response.ok) {
+        document.getElementById('weatherCard').classList.remove('hidden');
+        document.getElementById('location').innerText = data.name + ", " + data.sys.country;
+        document.getElementById('temperature').innerText = `${data.main.temp} °C`;
+        document.getElementById('description').innerText = data.weather[0].description;
+        document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+      } else {
+        alert("City not found!");
+      }
+    }
+  </script>
+</body>
+</html>
